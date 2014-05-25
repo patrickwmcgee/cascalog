@@ -140,6 +140,7 @@
 (defn validate-predicates! [preds opts]
   (let [grouped (group-by (fn [x]
                             (condp #(%1 %2) (:op x)
+                              ;; TODO figure out if this is bound to the cascading platform per *context* being CascadingPlatform.
                               platform/gen? :gens
                               d/bufferop? :buffers
                               d/aggregateop? :aggs

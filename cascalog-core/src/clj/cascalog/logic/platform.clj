@@ -22,6 +22,7 @@
 
 (defrecord CascadingPlatform []
   IPlatform
+  ;; Given a variable x tell whether or not x is a generator
   (generator? [_ x]
     (satisfies? types/IGenerator x))
 
@@ -36,6 +37,17 @@
 
 (defn gen? [g]
   (generator? *context* g))
+
+(defrecord ClojurePlatform []
+  "Clojure in memory platform for cascalog"
+  IPlatform
+  ;; answers the question is this a generator?
+  (generator? [_ x]
+    (satisfies? types/IGenerator))
+  ;; TODO PWM figure out how to represent the source for an in memory
+  ;; platform
+  (generator [p gen fields options]))
+
 
 (comment
   (require '[cascalog.cascading.flow :as f])
