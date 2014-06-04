@@ -16,17 +16,22 @@
 ;; the same pattern as scalding. Go to the tuple, come back from the
 ;; tuple. Accomplish this with a from-tuple method.
 
+;; This protocol is used for transforming some representation into a tuple
 (defprotocol ITuple
   (to-tuple [this]
     "Returns a tupled representation of the supplied thing."))
 
 (extend-protocol ITuple
+  ;; If it is already a tuple, then just return the tuple?
   Tuple
   (to-tuple [t] t)
 
+  ;; If the supplied type is a clojure.lang.IPersistentVector coerce it into a tuple
   clojure.lang.IPersistentVector
   (to-tuple [v] (Util/coerceToTuple v)) ;; TODO: do this in clojure.
 
+  ;; This almost recursive looking definition seems fishy, it takes an Object and calls 
+  ;; to-tuple twice?
   Object
   (to-tuple [v] (to-tuple [v])))
 
@@ -108,6 +113,7 @@
     (Merge. (into-array Pipe [(Pipe. (u/uuid) l)
                               (Pipe. (u/uuid) r)])))
 
+  ;; TODO PM Should this move into 
   ClojureFlow
   (plus [l r]
     (letfn [(merge-k [k] (merge (k l) (k r)))
