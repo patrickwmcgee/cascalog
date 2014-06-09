@@ -38,15 +38,15 @@
 (defn gen? [g]
   (generator? *context* g))
 
-(defrecord ClojurePlatform []
+;;(defrecord ClojurePlatform []
   "Clojure in memory platform for cascalog"
-  IPlatform
+;;  IPlatform
   ;; answers the question is this a generator?
-  (generator? [_ x]
-    (satisfies? types/IGenerator))
+;; (generator? [_ x]
+;;    (satisfies? types/IGenerator))
   ;; TODO PWM figure out how to represent the source for an in memory
   ;; platform
-  (generator [p gen fields options]))
+;;  (generator [p gen fields options]))
 
 
 (comment
