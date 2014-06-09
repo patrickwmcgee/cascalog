@@ -1,4 +1,4 @@
-(ns cascalog.in-memory.operations
+(ns cascalog.in-memory.im-operations
   (:require [cascalog.logic.vars :as v]
             [cascalog.logic.parse :as p]))
 
@@ -10,8 +10,13 @@
   "For each of the source sequences apply the mapping-fn to the result of
   getting values from inputnames out of the specified source and then apply 
   the results into the output names" 
-  (loop [output-map {}]
-    (if (not (= nil (first source-seq)))
-      (recur (assoc my-map (first source-seq))
+  (loop [my-map {}
+         my-seq (seq [])]
+    (if (seq source-seq)
+      (recur (into my-seq (first source-seq))
              (rest source-seq))
-      output-map)))
+      my-seq))
+  
+ 
+  
+  )

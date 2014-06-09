@@ -1,4 +1,4 @@
-(ns cascalog.in-memory.tap)
+(ns cascalog.in-memory.im-tap)
 
 ;; Represent taps as in memory sequences
 
