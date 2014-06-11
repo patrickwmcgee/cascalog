@@ -7,22 +7,31 @@
             [clojure.pprint :refer (pprint)]))
 
 (comment "playing with the cascalog query mapping"
-  (let [query-map (v/with-logic-vars 
-                    (p/parse-subquery [?x ?y ?z] [[[[1 2 3]] ?x] [* ?x ?x :> ?y] [* ?x ?y :> ?z]]))]
-    (pprint (-> query-map
-                :node
-                :source
-                :source 
-                ))))
+         (let [query-map (v/with-logic-vars 
+                           (p/parse-subquery [?x ?y ?z] [[[[1 2 3]] ?x] [* ?x ?x :> ?y] [* ?x ?y :> ?z]]))]
+           (pprint (-> query-map
+                       :node
+                       :source
+                       :source 
+                       ))))
 
 (deftest test-apply-transform
   (let [source-seq (seq [{"?x" 1} {"?x" 2}{"?x" 3}]) 
         map-fn * 
         input ["?x" "?x"]
-        output ["?y"]]
-    (do 
-      (pprint (apply-transform source-seq map-fn input output))
-      (apply map-fn [1 2])
-      (pprint source-seq)
-      (pprint (keys (first source-seq)))
-      (pprint (get (first source-seq) "?x")))))
+        output ["?y"]
+        result-seq (seq [{"?y" 1} {"?y" 4} {"?y" 9}])]
+    (fact
+      "apply-transform properly applies a mapping transformation and returns a result sequence as a map"
+      (apply-transform source-seq map-fn input output) => result-seq)))
+
+(defn my-square [x1 x2] [x1 (* x1 x2)])
+(deftest test-apply-transform-identity
+  (let [source-seq (seq [{"?x" 1} {"?x" 2}{"?x" 3}]) 
+        map-fn my-square 
+        input ["?x" "?x"]
+        output ["?x" "?y"]
+        result-seq (seq [{"?x" 1 "?y" 1} {"?x" 2 "?y" 4} {"?x" 3 "?y" 9}])]
+    (fact
+      "apply-transform properly applies a mapping transformation and returns a result sequence as a map for functions with multiple returns"
+      (apply-transform source-seq map-fn input output) => result-seq)))

@@ -10,13 +10,9 @@
   "For each of the source sequences apply the mapping-fn to the result of
   getting values from inputnames out of the specified source and then apply 
   the results into the output names" 
-  (loop [my-map {}
-         my-seq (seq [])]
-    (if (seq source-seq)
-      (recur (into my-seq (first source-seq))
-             (rest source-seq))
-      my-seq))
-  
- 
-  
-  )
+  (map (fn [source-map] 
+         (let [fn-input (map (partial get source-map) input-names)
+               fn-output (reduce mapping-fn fn-input)
+               output-vec (if (vector? fn-output) fn-output [fn-output])]
+           (zipmap output-names output-vec)))
+       source-seq))
