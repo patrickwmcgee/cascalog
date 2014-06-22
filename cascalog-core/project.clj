@@ -20,6 +20,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/tools.macro "0.1.2"]
                  [log4j "1.2.16"]
+                 [org.clojure/tools.trace "0.7.8"]
                  [org.slf4j/slf4j-log4j12 "1.6.6"]
                  [cascading/cascading-hadoop ~CC-VERSION
                   :exclusions [org.codehaus.janino/janino
