@@ -20,3 +20,10 @@
              (zipmap output-names output-vec)
              (u/throw-illegal "Output variables arity and function output arity do not match"))))
        source-seq))
+
+(defn apply-filter-transform [source-seq input-names filter-pred]
+  (map (fn [source-map]
+         (let [fn-input (map (partial get source-map) input-names)]
+           (when (= true (apply filter-pred fn-input))
+             source-map)))
+       source-seq))

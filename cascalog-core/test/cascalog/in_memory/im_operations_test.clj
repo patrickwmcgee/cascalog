@@ -45,3 +45,13 @@
     (fact
       "Supplying a function that returns a different number of output variables than the desired output varaibles should throw an error"
      (apply-transform source-seq map-fn input output) => (throws IllegalArgumentException))))
+
+(deftest test-apply-filter 
+  (let [source-seq (seq [{"?x" 1}{"?x" 2}{"?x" 3}
+                         {"?x" 4}{"?x" 5}{"?x" 6}])
+        input ["?x"]
+        filter-pred even?
+        result-seq (seq [{"?x" 2} {"?x" 4}{"?x" 6}])]
+    (fact
+      "suplying a predicate function should properly filter a sequence of data"
+      (apply-filter-transform source-seq input filter-pred) => result-seq)))
