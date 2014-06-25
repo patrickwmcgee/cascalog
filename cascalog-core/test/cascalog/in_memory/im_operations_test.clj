@@ -55,3 +55,13 @@
     (fact
       "suplying a predicate function should properly filter a sequence of data"
       (apply-filter-transform source-seq input filter-pred) => result-seq)))
+
+(deftest test-apply-filter-other-fn
+  (let [source-seq (seq [{"?x" 1}{"?x" 2}{"?x" 3}
+                         {"?x" 4}{"?x" 5}{"?x" 6}])
+        input ["?x"]
+        filter-pred (fn [x] (> x 3))
+        result-seq (seq [{"?x" 4} {"?x" 5}{"?x" 6}])]
+    (fact
+      "suplying a predicate function should properly filter a sequence of data"
+      (apply-filter-transform source-seq input filter-pred) => result-seq)))

@@ -22,8 +22,7 @@
        source-seq))
 
 (defn apply-filter-transform [source-seq input-names filter-pred]
-  (map (fn [source-map]
-         (let [fn-input (map (partial get source-map) input-names)]
-           (when (= true (apply filter-pred fn-input))
-             source-map)))
-       source-seq))
+  (filter (fn [source-map]
+            (let [fn-input (map (partial get source-map) input-names)]
+              (apply filter-pred fn-input)))
+          source-seq))
