@@ -65,3 +65,17 @@
     (fact
       "suplying a predicate function should properly filter a sequence of data"
       (apply-filter-transform source-seq input filter-pred) => result-seq)))
+(defn tokenise [line]
+  "reads in a line of string and splits it by a regular expression"
+  (clojure.string/split line #"[\[\]\\\(\),.)\s]+"))
+
+(deftest test-mapcat-transform
+  (let [source-seq (seq [{"?line" "cat says meow"}{"?line" "dog says woof"}])
+        input ["?line"]
+        output ["?word"]
+        mapcatfn tokenise 
+        result-seq (seq [{"?word" "cat"}{"?word" "says"}{"?word" "meow"}
+                         {"?word" "dog"}{"?word" "says"}{"?word" "woof"}])]
+    (fact
+      "This mapcat example should take a sentence and split it into many results"
+      (apply-mapcat-transform source-seq input output mapcatfn) => result-seq)))

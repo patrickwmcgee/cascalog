@@ -26,3 +26,18 @@
             (let [fn-input (map (partial get source-map) input-names)]
               (apply filter-pred fn-input)))
           source-seq))
+
+(defn apply-mapcat-transform [source-seq input-names output-names mapcatfn]
+  (mapcat (fn [source-map] 
+            (let [fn-input (map (partial get source-map) input-names)
+                  fn-output (apply mapcatfn fn-input)
+                  output-names-fix (if (coll? output-names)
+                                     (first output-names)
+                                     output-names)  
+                  output-vec (collectify fn-output)]
+              (map (fn [result] 
+                     (if (> 1 (count result))
+                       (zipmap output-names-fix result)
+                       (assoc {} output-names-fix result)))
+                   output-vec)))
+          source-seq))
