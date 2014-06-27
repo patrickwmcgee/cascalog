@@ -31,13 +31,10 @@
   (mapcat (fn [source-map] 
             (let [fn-input (map (partial get source-map) input-names)
                   fn-output (apply mapcatfn fn-input)
-                  output-names-fix (if (coll? output-names)
-                                     (first output-names)
-                                     output-names)  
                   output-vec (collectify fn-output)]
               (map (fn [result] 
                      (if (> 1 (count result))
-                       (zipmap output-names-fix result)
-                       (assoc {} output-names-fix result)))
+                       (zipmap output-names result)
+                       (assoc {} (first output-names) result)))
                    output-vec)))
           source-seq))
