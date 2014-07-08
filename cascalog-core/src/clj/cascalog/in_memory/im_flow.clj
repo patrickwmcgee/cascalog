@@ -13,3 +13,20 @@
 
  ;; )
 
+(defn im-flow-def 
+  "Generates an instance of ImFlowDef off of the supplied ClojureFlow."
+  []
+  )
+
+(defprotocol IRunnable
+  "All runnable items should implement this function."
+  (run! [x]))
+
+#_(extend-protocol IRunnable
+;  IMFlowDef
+;  (run! [fd]
+;    (run! (compile-hadoop fd)))
+
+  ClojureFlow
+  (run! [flow]
+    (run! (im-flow-def flow))))

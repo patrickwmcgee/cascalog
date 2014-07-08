@@ -39,7 +39,7 @@
   (generator? *context* g))
 
 ;;(defrecord ClojurePlatform []
-  "Clojure in memory platform for cascalog"
+;;  "Clojure in memory platform for cascalog"
 ;;  IPlatform
   ;; answers the question is this a generator?
 ;; (generator? [_ x]

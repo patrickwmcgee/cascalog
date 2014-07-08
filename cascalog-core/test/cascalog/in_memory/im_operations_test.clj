@@ -4,6 +4,8 @@
         cascalog.in-memory.im-operations)
   (:require [cascalog.logic.vars :as v]
             [cascalog.logic.parse :as p]
+            [cascalog.in-memory.im-platform :as imp]
+            [cascalog.cascading.operations :as cops]
             [clojure.pprint :refer (pprint)]))
 
 (comment "playing with the cascalog query mapping"
@@ -23,7 +25,7 @@
         result-seq (seq [{"?y" 1} {"?y" 4} {"?y" 9}])]
     (fact
       "apply-transform properly applies a mapping transformation and returns a result sequence as a map"
-      (apply-transform source-seq map-fn input output) => result-seq)))
+      (im-map* source-seq map-fn input output) => result-seq)))
 
 (defn my-square [x1 x2] [x1 (* x1 x2)])
 (deftest test-apply-transform-identity
@@ -34,7 +36,7 @@
         result-seq (seq [{"?x" 1 "?y" 1} {"?x" 2 "?y" 4} {"?x" 3 "?y" 9}])]
     (fact
       "apply-transform properly applies a mapping transformation and returns a result sequence as a map for functions with multiple returns"
-      (apply-transform source-seq map-fn input output) => result-seq)))
+      (im-map* source-seq map-fn input output) => result-seq)))
 
 (deftest test-apply-transform-bad-arity
   (let [source-seq (seq [{"?x" 1} {"?x" 2}{"?x" 3}])
@@ -44,7 +46,7 @@
         result-seq (seq [{"?y" 1} {"?y" 4} {"?y" 9}])]
     (fact
       "Supplying a function that returns a different number of output variables than the desired output varaibles should throw an error"
-     (apply-transform source-seq map-fn input output) => (throws IllegalArgumentException))))
+     (im-map* source-seq map-fn input output) => (throws IllegalArgumentException))))
 
 (deftest test-apply-filter 
   (let [source-seq (seq [{"?x" 1}{"?x" 2}{"?x" 3}
@@ -54,7 +56,7 @@
         result-seq (seq [{"?x" 2} {"?x" 4}{"?x" 6}])]
     (fact
       "suplying a predicate function should properly filter a sequence of data"
-      (apply-filter-transform source-seq input filter-pred) => result-seq)))
+      (im-filter* source-seq input filter-pred) => result-seq)))
 
 (deftest test-apply-filter-other-fn
   (let [source-seq (seq [{"?x" 1}{"?x" 2}{"?x" 3}
@@ -64,7 +66,7 @@
         result-seq (seq [{"?x" 4} {"?x" 5}{"?x" 6}])]
     (fact
       "suplying a predicate function should properly filter a sequence of data"
-      (apply-filter-transform source-seq input filter-pred) => result-seq)))
+      (im-filter* source-seq input filter-pred) => result-seq)))
 (defn tokenise [line]
   "reads in a line of string and splits it by a regular expression"
   (clojure.string/split line #"[\[\]\\\(\),.)\s]+"))
@@ -78,4 +80,14 @@
                          {"?word" "dog"}{"?word" "says"}{"?word" "woof"}])]
     (fact
       "This mapcat example should take a sentence and split it into many results"
-      (apply-mapcat-transform source-seq input output mapcatfn) => result-seq)))
+      (im-mapcat* source-seq input output mapcatfn) => result-seq)))
+
+(deftest test-logically-im 
+  (let [source-seq (seq [{"?x" 1} {"?x" 2}{"?x" 3}])
+        map-fn *
+        input ["?x" "?x"]
+        output ["?y"]
+        result-seq (seq [{"?y" 1} {"?y" 4} {"?y" 9}])]
+    (fact
+      "use logically here to test that it works this will fail"
+      (cops/logically source-seq input output map-fn ) => result-seq)))
