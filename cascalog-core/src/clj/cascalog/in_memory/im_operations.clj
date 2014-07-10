@@ -9,7 +9,7 @@
 ;; Try making a function that takes a source sequence, a map fn, input field names and output field names and does the right transformation.
 
 
-(defn im-map* [source-seq mapping-fn input-names output-names]
+(defn im-map [source-seq mapping-fn input-names output-names]
   "For each of the source sequences apply the mapping-fn to the result of
   getting values from inputnames out of the specified source and then apply 
   the results into the output names" 
@@ -22,13 +22,13 @@
              (u/throw-illegal "Output variables arity and function output arity do not match"))))
        source-seq))
 
-(defn im-filter* [source-seq input-names filter-pred]
+(defn im-filter [source-seq input-names filter-pred]
   (filter (fn [source-map]
             (let [fn-input (map (partial get source-map) input-names)]
               (apply filter-pred fn-input)))
           source-seq))
 
-(defn im-mapcat* [source-seq input-names output-names mapcatfn]
+(defn im-mapcat [source-seq input-names output-names mapcatfn]
   (mapcat (fn [source-map] 
             (let [fn-input (map (partial get source-map) input-names)
                   fn-output (apply mapcatfn fn-input)
